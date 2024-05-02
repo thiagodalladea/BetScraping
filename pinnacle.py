@@ -6,10 +6,11 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from a_selenium2df import get_df
 from PrettyColorPrinter import add_printer
+from time import sleep
 
 add_printer(1)
 
-def get_dataframe(query="*", selector="*"):
+def get_dataframe(driver, query="*", selector="*"):
     df = pd.DataFrame()
     while df.empty:
         df = get_df(
@@ -21,15 +22,32 @@ def get_dataframe(query="*", selector="*"):
             with_methods = True,
         )
     df = df.loc[df.aa_className==selector]
-    df = df.dropna(subset="aa_innerText").aa_innerText.apply(lambda x: pd.Series([q for q in re.split(r"[\n]", x)]))[[0, 1, 3, 4, 5]].rename( columns={0: "team1_name", 1: "team2_name", 3: "team1_odd", 4: "draw_odd", 5: "team2_odd"}).dropna().assign(team1_odd = lambda q:q.team1_odd.str.replace(",", "."), team2_odd=lambda q:q.team2_odd.str.replace(',', '.'),draw_odd=lambda q:q.draw_odd.str.replace(',', '.')).astype({'team1_odd': 'Float64', 'draw_odd': 'Float64', 'team2_odd': 'Float64'})
+    df = df.dropna(subset="aa_innerText").aa_innerText.apply(lambda x: pd.Series([q for q in re.split(r"[\n]", x)]))[[0, 1, 3, 4, 5]].rename( columns={0: "pinnacle_name1", 1: "pinnacle_name2", 3: "pinnacle_odd1", 4: "pinnacle_odd2", 5: "pinnacle_odd3"}).dropna().assign(pinnacle_odd1 = lambda q:q.pinnacle_odd1.str.replace(",", "."), pinnacle_odd2=lambda q:q.pinnacle_odd2.str.replace(',', '.'),pinnacle_odd3=lambda q:q.pinnacle_odd3.str.replace(',', '.')).astype({'pinnacle_odd1': 'Float64', 'pinnacle_odd3': 'Float64', 'pinnacle_odd2': 'Float64'})
     return df.reset_index(drop=True)
 
-try:
-    driver = Driver(uc=True)
-    driver.get(
-        "https://pinnacle.com/pt/soccer/brazil-serie-a/matchups/#all"
-    )
-    df = get_dataframe(selector="style_row__yBzX8 style_row__12oAB")
-except Exception as exception:
-    print("Ocorreu algum erro durante a requisição de dados :(\n\n")
-    print("Mais informações:\n", exception)
+def get_pinnacle():
+    try:
+        driver = Driver(uc=True)
+        sleep(2)
+        driver.get(
+            "https://pinnacle.com/pt/soccer/brazil-serie-a/matchups/#all"
+        )
+        sleep(5)
+        df = get_dataframe(driver, selector="style_row__yBzX8 style_row__12oAB")
+        print("\nRequisição de dados da PINNACLE concluída com sucesso!\n")
+        driver.quit()
+        df['pinnacle_name1'] = df['pinnacle_name1'].str.replace(' (Jogo/Partida)', '')
+        df['pinnacle_name2'] = df['pinnacle_name2'].str.replace(' (Jogo/Partida)', '')
+        df['pinnacle_name1'] = df['pinnacle_name1'].str.replace(' FR RJ', '')
+        df['pinnacle_name2'] = df['pinnacle_name2'].str.replace(' FR RJ', '')
+        df['pinnacle_name1'] = df['pinnacle_name1'].str.replace('Vitoria BA', 'Vitória')
+        df['pinnacle_name2'] = df['pinnacle_name2'].str.replace('Vitoria BA', 'Vitória')
+        df['pinnacle_name1'] = df['pinnacle_name1'].str.replace(' Paranaense', '-PR')
+        df['pinnacle_name2'] = df['pinnacle_name2'].str.replace(' Paranaense', '-PR')
+        df['pinnacle_name1'] = df['pinnacle_name1'].str.replace(' Mineiro', '-MG')
+        df['pinnacle_name2'] = df['pinnacle_name2'].str.replace(' Mineiro', '-MG')
+        return df.sort_values(by=["pinnacle_name1", "pinnacle_name2"]).reset_index(drop=True)
+    except Exception as exception:
+        print("Ocorreu algum erro durante a requisição de dados da PINNACLE\n\n")
+        print("Mais informações:\n", exception)
+        driver.quit()
