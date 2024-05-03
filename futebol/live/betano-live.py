@@ -21,14 +21,8 @@ def get_dataframe(driver, query="*", selector="*"):
             queryselector = query,
             with_methods = True,
         )
-    df = df.loc[df.aa_className==selector]
-    df = df.dropna(subset="aa_innerText").aa_innerText.apply(lambda x: pd.Series([q for q in re.split(r"[\n]", x)\
-        if not re.match(r"\b\d{2}/\d{2}\b", q) if not re.match(r"\d{2}:\d{2}\b", q) if not re.match("AO VIVO", q) if not re.match("SO", q)]))\
-            [[0, 1, 4, 6]].rename( columns={0: "betano_name1", 1: "betano_name2", 4: "betano_odd1", 6: "betano_odd2"})\
-                .dropna().assign(betano_odd1 = lambda q:q.betano_odd1.str.replace(",", "."), betano_odd2=lambda q:q.betano_odd2.str.replace(',', '.'))\
-                    .astype({'betano_odd1': 'Float64', 'betano_odd2': 'Float64'})
-    df["betano_name1"] = df["betano_name1"].apply(lambda x: x.split(" ", 1)[1])
-    df["betano_name2"] = df["betano_name2"].apply(lambda x: x.split(" ", 1)[1])
+    # df = df.loc[df.aa_className==selector]
+    # df = df.dropna(subset="aa_innerText").aa_innerText.apply(lambda x: pd.Series([q for q in re.split(r"[\n]", x) if not re.match(r"\b\d{2}/\d{2}\b", q) if not re.match(r"\d{2}:\d{2}\b", q) if not re.match("AO VIVO", q) if not re.match("SO", q) if not re.match(r'^\d+$', q)]))
     return df.reset_index(drop=True)
 
 def get_betano():
@@ -36,12 +30,12 @@ def get_betano():
         driver = Driver(uc=True)
         sleep(2)
         driver.get(
-            "https://br.betano.com/sport/basquete/eua/nba/441g/"
+            "https://br.betano.com/live/"
         )
         sleep(5)
-        df = get_dataframe(driver, selector="vue-recycle-scroller__item-view")
+        df = get_dataframe(driver)
         print("\nRequisição de dados da BETANO concluída com sucesso!\n")
-        driver.quit()
+        #driver.quit()
         return df
     except Exception as exception:
         print("Ocorreu algum erro durante a requisição de dados da BETANO\n\n")

@@ -28,52 +28,53 @@ print("-- O processo pode demorar um pouco.\n\n")
 print("-- Carregando as informações...\n\n")
 
 df_betano = pd.DataFrame()
-#df_sportingbet = pd.DataFrame()
+df_sportingbet = pd.DataFrame()
 #df_bet365 = pd.DataFrame()
 df_pinnacle = pd.DataFrame()
 
-#df_betano = get_betano()
-#df_sportingbet = get_sporting_bet()
+df_betano = get_betano()
+df_sportingbet = get_sporting_bet()
 #df_bet365 = get_bet365()
-#df_pinnacle = get_pinnacle()
+df_pinnacle = get_pinnacle()
 
-data_betano = {
-    'betano_name1': ['Philadelphia 76ers', 'Orlando Magic', 'Dallas Mavericks', 'Denver Nuggets'],
-    'betano_name2': ['New York Knicks', 'Cleveland Cavaliers', 'Los Angeles Clippers', 'Minnesota Timberwolves'],
-    'betano_odd1': [2.52, 1.57, 1.31, 1.55],
-    'betano_odd2': [2.5, 2.5, 3.65, 2.52]
-}
+# data_betano = {
+#     'betano_name1': ['Philadelphia 76ers', 'Orlando Magic', 'Dallas Mavericks', 'Denver Nuggets'],
+#     'betano_name2': ['New York Knicks', 'Cleveland Cavaliers', 'Los Angeles Clippers', 'Minnesota Timberwolves'],
+#     'betano_odd1': [2.52, 1.57, 1.31, 1.55],
+#     'betano_odd2': [2.5, 2.5, 3.65, 2.52]
+# }
 
-data_pinnacle = {
-    'pinnacle_name1': ['Philadelphia 76ers', 'Orlando Magic', 'Dallas Mavericks', 'Denver Nuggets'],
-    'pinnacle_name2': ['New York Knicks', 'Cleveland Cavaliers', 'Los Angeles Clippers', 'Minnesota Timberwolves'],
-    'pinnacle_odd1': [1.645, 1.588, 1.3, 5.564],
-    'pinnacle_odd2': [2.38, 2.53, 3.83, 2.58],
-}
+# data_pinnacle = {
+#     'pinnacle_name1': ['Philadelphia 76ers', 'Orlando Magic', 'Dallas Mavericks', 'Denver Nuggets'],
+#     'pinnacle_name2': ['New York Knicks', 'Cleveland Cavaliers', 'Los Angeles Clippers', 'Minnesota Timberwolves'],
+#     'pinnacle_odd1': [1.645, 1.588, 1.3, 5.564],
+#     'pinnacle_odd2': [2.38, 2.53, 3.83, 2.58],
+# }
 
-df_betano = pd.DataFrame(data_betano)
-df_pinnacle = pd.DataFrame(data_pinnacle)
+# df_betano = pd.DataFrame(data_betano)
+# df_pinnacle = pd.DataFrame(data_pinnacle)
 
 df_betano = df_betano.sort_values(by="betano_name1")
 df_pinnacle = df_pinnacle.sort_values(by="pinnacle_name1")
+df_sportingbet = df_sportingbet.sort_values(by="sportingbet_name1")
 
 # if any(df.empty for df in [df_betano, df_sportingbet, df_bet365, df_pinnacle]):
 #     print("A requisição de dados não aconteceu corretamente.")
 
 print("\n\nBETANO------------")
 print(df_betano)
-# print("\n\nSPORTING BET------------")
-# print(df_sportingbet)
-# print("\n\nBET 365------------")
-# print(df_bet365)
 print("\n\nPINNACLE------------")
 print(df_pinnacle)
+print("\n\nSPORTING BET------------")
+print(df_sportingbet)
+# print("\n\nBET 365------------")
+# print(df_bet365)
 
 merged_df = pd.DataFrame()
 
-#merged_df = pd.merge(df_betano, df_sportingbet, left_on=["betano_name1", "betano_name2"], right_on=["sportingbet_name1", "sportingbet_name2"], how="outer")
+merged_df = pd.merge(df_betano, df_pinnacle, left_on=['betano_name1', 'betano_name2'], right_on=['pinnacle_name1', 'pinnacle_name2'], how='outer')
+merged_df = pd.merge(merged_df, df_sportingbet, left_on=["betano_name1", "betano_name2"], right_on=["sportingbet_name1", "sportingbet_name2"], how="outer")
 #merged_df = pd.merge(merged_df, df_bet365, left_on=["betano_name1", "betano_name2"], right_on=["bet365_name1", "bet365_name2"], how="outer")
-merged_df = pd.merge(df_betano, df_pinnacle, how='outer', left_on=['betano_name1', 'betano_name2'], right_on=['pinnacle_name1', 'pinnacle_name2'])
 merged_df = merged_df.dropna().reset_index(drop=True)
 
 print(merged_df)
@@ -84,6 +85,7 @@ columns = np.array(
     [
         ["betano_odd1", "betano_odd2"],
         ["pinnacle_odd1", "pinnacle_odd2"],
+        ["sportingbet_odd1", "sportingbet_odd2"]
     ]
 )
 
@@ -164,10 +166,9 @@ try:
     df_final = (
         pd.concat(allresults).sort_values(by=f"porcentagem").reset_index(drop=True)
     )
-    print(df_final)
+    print("ARBITRAGEM------------")
+    unique = df_final[["team1", "team2", "casa0", "casa1", "odd_casa0", "odd_casa1", "aposta0", "aposta1", "lucro0", ]]
+    print(unique)
 except Exception:
     df_final = pd.DataFrame()
-
-print("ARBITRAGEM------------")
-unique = df_final[["team1", "team2", "casa0", "casa1", "odd_casa0", "odd_casa1", "aposta0", "aposta1", "lucro0", ]]
-print(unique)
+    print("NÃO HÁ ARBITRAGENS POSSÍVEIS NO MOMENTO")

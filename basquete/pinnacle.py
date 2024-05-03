@@ -26,6 +26,10 @@ def get_dataframe(driver, query="*", selector="*"):
         .rename( columns={0: "pinnacle_name1", 1: "pinnacle_name2", 7: "pinnacle_odd1", 8: "pinnacle_odd2"}).dropna()\
             .assign(pinnacle_odd1 = lambda q:q.pinnacle_odd1.str.replace(",", "."), pinnacle_odd2=lambda q:q.pinnacle_odd2.str\
                 .replace(',', '.')).astype({'pinnacle_odd1': 'Float64', 'pinnacle_odd2': 'Float64'})
+    df["pinnacle_name1"], df["pinnacle_name2"] = df["pinnacle_name2"], df["pinnacle_name1"]
+    df["pinnacle_odd1"], df["pinnacle_odd2"] = df["pinnacle_odd2"], df["pinnacle_odd1"]
+    df["pinnacle_name1"] = df["pinnacle_name1"].apply(lambda x: x.split(" ", 1)[1])
+    df["pinnacle_name2"] = df["pinnacle_name2"].apply(lambda x: x.split(" ", 1)[1])
     return df.reset_index(drop=True)
 
 def get_pinnacle():
@@ -37,6 +41,7 @@ def get_pinnacle():
         )
         sleep(5)
         df = get_dataframe(driver, selector="style_row__yBzX8 style_row__12oAB")
+        print("\nRequisição de dados da PINNACLE concluída com sucesso!\n")
         driver.quit()
         return df
     except Exception as exception:

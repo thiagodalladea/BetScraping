@@ -148,9 +148,9 @@ try:
     df_final = (
         pd.concat(allresults).sort_values(by=f"porcentagem").reset_index(drop=True)
     )
+    print("ARBITRAGEM------------")
+    unique = df_final[["team1", "team2", "casa0", "casa1", "casa2", "odd_casa0", "odd_casa1", "odd_casa2", "aposta0", "aposta1", "aposta2", "lucro0", ]]
+    print(unique)
 except Exception:
     df_final = pd.DataFrame()
-
-print("ARBITRAGEM------------")
-unique = df_final[["team1", "team2", "casa0", "casa1", "casa2", "odd_casa0", "odd_casa1", "odd_casa2", "aposta0", "aposta1", "aposta2", "lucro0", ]]
-print(unique)
+    print("NÃO HÁ ARBITRAGENS NO MOMENTO")

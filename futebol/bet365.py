@@ -47,7 +47,9 @@ def get_bet365():
         )
         sleep(5)
         df_teams = get_dataframe_teams(driver, selector="rcl-ParticipantFixtureDetails_TeamNames")
+        print(df_teams)
         df_teams = df_teams.dropna(subset="aa_innerText").aa_innerText.apply(lambda x: pd.Series([q for q in re.split(r"[\n]", x) if not re.match(r"\d{2}:\d{2}\b", q) if not re.match(r"^\d+$", q)]))[[0, 1]].rename( columns={0: "bet365_name1", 1: "bet365_name2"}).dropna()
+        print(df_teams)
         df_odds = get_dataframe_odds(driver)
         df_odds = df_odds.loc[df_odds.aa_className == "sgl-ParticipantOddsOnly80_Odds"]
         df_odds = df_odds[["aa_innerText"]]
