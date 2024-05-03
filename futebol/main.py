@@ -37,6 +37,7 @@ df_sportingbet = get_sporting_bet()
 df_bet365 = get_bet365()
 df_pinnacle = get_pinnacle()
 
+
 if any(df.empty for df in [df_betano, df_sportingbet, df_bet365, df_pinnacle]):
     print("A requisição de dados não aconteceu corretamente.")
 
@@ -141,7 +142,7 @@ for col, number in zip(good_results_np_array_col, good_results_np_array):
         win[f"casa{i}"] = col[i]
         win[f"div{i}"] = win[f"odd{i}"] / win[f"porcentagem"]
         win[f"aposta{i}"] = bet_value * win[f"div{i}"]
-        win[f"lucro{i}"] = win[f"aposta{i}"] * win[f"odd_casa{i}"]
+        win[f"lucro{i}"] = win[f"aposta{i}"] * win[f"odd_casa{i}"] - 100
     allresults.append(win)
 try:
     df_final = (
@@ -150,5 +151,6 @@ try:
 except Exception:
     df_final = pd.DataFrame()
 
+print("ARBITRAGEM------------")
 unique = df_final[["team1", "team2", "casa0", "casa1", "casa2", "odd_casa0", "odd_casa1", "odd_casa2", "aposta0", "aposta1", "aposta2", "lucro0", ]]
 print(unique)
