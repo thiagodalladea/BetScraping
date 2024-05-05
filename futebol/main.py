@@ -38,8 +38,8 @@ df_bet365 = get_bet365()
 df_pinnacle = get_pinnacle()
 
 
-if any(df.empty for df in [df_betano, df_sportingbet, df_bet365, df_pinnacle]):
-    print("A requisição de dados não aconteceu corretamente.")
+# if any(df.empty for df in [df_betano, df_sportingbet, df_bet365, df_pinnacle]):
+#     print("A requisição de dados não aconteceu corretamente.")
 
 print("\n\nBETANO------------")
 print(df_betano)
@@ -50,12 +50,16 @@ print(df_bet365)
 print("\n\nPINNACLE------------")
 print(df_pinnacle)
 
-merged_df = pd.merge(df_betano, df_sportingbet, left_on=["betano_name1", "betano_name2"], right_on=["sportingbet_name1", "sportingbet_name2"], how="outer")
-merged_df = pd.merge(merged_df, df_bet365, left_on=["betano_name1", "betano_name2"], right_on=["bet365_name1", "bet365_name2"], how="outer")
-merged_df = pd.merge(merged_df, df_pinnacle, left_on=["betano_name1", "betano_name2"], right_on=["pinnacle_name1", "pinnacle_name2"], how="outer")
+merged_df = pd.merge(df_betano, df_sportingbet, left_on=["betano_name1", "betano_name2"],
+    right_on=["sportingbet_name1", "sportingbet_name2"], how="outer")
+merged_df = pd.merge(merged_df, df_bet365, left_on=["betano_name1", "betano_name2"],
+    right_on=["bet365_name1", "bet365_name2"], how="outer")
+merged_df = pd.merge(merged_df, df_pinnacle, left_on=["betano_name1", "betano_name2"],
+    right_on=["pinnacle_name1", "pinnacle_name2"], how="outer")
 merged_df = merged_df.dropna().reset_index(drop=True)
 
-# print(merged_df)
+print("\n\nMERGED------------")
+print(merged_df)
 
 bet_value = 100
 

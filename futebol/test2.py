@@ -50,11 +50,10 @@ def get_dataframe_odds(driver, query="*"):
 def get_bet365():
     try:
         driver = Driver(uc=True)
-        sleep(2)
+        sleep(2.3)
         driver.get(
             "https://www.bet365.com/#/AC/B1/C1/D1002/E88369731/G40/"
         )
-        sleep(3)
         df_teams = get_dataframe_teams(driver, query="div.rcl-ParticipantFixtureDetails_LhsContainer")
         df_odds = get_dataframe_odds(driver, query="span.sgl-ParticipantOddsOnly80_Odds")
         driver.quit()
@@ -69,9 +68,9 @@ def get_bet365():
         df = pd.concat([df, df_part_1.reset_index(drop=True)], axis=1)
         df = pd.concat([df, df_part_2.reset_index(drop=True)], axis=1)
         df = pd.concat([df, df_part_3.reset_index(drop=True)], axis=1)
+        print("\nRequisição de dados da BET365 concluída com sucesso!\n")
         df["bet365_name1"] = df["bet365_name1"].apply(rename)
         df["bet365_name2"] = df["bet365_name2"].apply(rename)
-        print("\nRequisição de dados da BET365 concluída com sucesso!\n")
 
         return df.sort_values(by=["bet365_name1", "bet365_name2"]).reset_index(drop=True)
     except Exception as exception:
