@@ -43,8 +43,8 @@ def open_site(name, url, query="*"):
         df = get_bet365_teams(df)
     elif name == "bet365_odds":
         df = get_bet365_odds(df)
-    elif name == "pinnacle":
-        df = get_pinnacle(df)
+    # elif name == "pinnacle":
+    #     df = get_pinnacle(df)
     results.append(df)
     drivers[name].quit()
 
@@ -53,15 +53,15 @@ names = [
     "sporting_bet",
     "bet365_teams",
     "bet365_odds",
-    "pinnacle",
+    # "pinnacle",
 ]
 
 urls = [
-    "https://br.betano.com/sport/futebol/brasil/brasileirao-serie-a-betano/10016/",
-    "https://sports.sportingbet.com/pt-br/sports/futebol-4/aposta/brasil-33/brasileir%C3%A3o-a-102838",
-    "https://www.bet365.com/#/AC/B1/C1/D1002/E88369731/G40/",
-    "https://www.bet365.com/#/AC/B1/C1/D1002/E88369731/G40/",
-    "https://pinnacle.com/pt/soccer/brazil-serie-a/matchups/#all",
+    "https://br.betano.com/sport/futebol/league/premier-league-inglaterra/1/",
+    "https://sports.sportingbet.com/pt-br/sports/futebol-4/aposta/inglaterra-14/premier-league-102841",
+    "https://www.bet365.com/#/AC/B1/C1/D1002/E91422157/G40/",
+    "https://www.bet365.com/#/AC/B1/C1/D1002/E91422157/G40/",
+    # "https://pinnacle.com/pt/soccer/brazil-serie-a/matchups/#all",
 ]
 
 querys = [
@@ -69,7 +69,7 @@ querys = [
     "ms-event",
     "div.rcl-ParticipantFixtureDetails_TeamNames",
     "span.sgl-ParticipantOddsOnly80_Odds",
-    "div.style_row__12oAB",
+    # "div.style_row__12oAB",
 ]
 
 for name in names:
@@ -105,7 +105,7 @@ for index in sorted(rm_ind, reverse=True):
     del results[index]
 
 df_bet_365 = pd.concat([df1, df2.reset_index(drop=True)], axis=1)
-df_bet_365.sort_values(by=["bet365_name1", "bet365_name2"])
+df_bet_365 = df_bet_365.sort_values(by=["bet365_name1", "bet365_name2"])
 results.append(df_bet_365)
 print(results)
 
@@ -116,8 +116,8 @@ for result in results:
         df_sportingbet = result
     elif result.columns[0] == "bet365_name1":
         df_bet365 = result
-    elif result.columns[0] == "pinnacle_name1":
-        df_pinnacle = result
+    # elif result.columns[0] == "pinnacle_name1":
+    #     df_pinnacle = result
 
 merged_df = pd.DataFrame()
 
@@ -125,8 +125,8 @@ merged_df = pd.merge(df_betano, df_sportingbet, left_on=["betano_name1", "betano
     right_on=["sportingbet_name1", "sportingbet_name2"], how="outer")
 merged_df = pd.merge(merged_df, df_bet365, left_on=["betano_name1", "betano_name2"],
     right_on=["bet365_name1", "bet365_name2"], how="outer")
-merged_df = pd.merge(merged_df, df_pinnacle, left_on=["betano_name1", "betano_name2"],
-    right_on=["pinnacle_name1", "pinnacle_name2"], how="outer")
+# merged_df = pd.merge(merged_df, df_pinnacle, left_on=["betano_name1", "betano_name2"],
+#     right_on=["pinnacle_name1", "pinnacle_name2"], how="outer")
 merged_df = merged_df.dropna().reset_index(drop=True)
 
 print("\n\nMERGED------------")
@@ -139,7 +139,7 @@ columns = np.array(
         ["betano_odd1", "betano_odd2", "betano_odd3"],
         ["sportingbet_odd1", "sportingbet_odd2", "sportingbet_odd3"],
         ["bet365_odd1", "bet365_odd2", "bet365_odd3"],
-        ["pinnacle_odd1", "pinnacle_odd2", "pinnacle_odd3"],
+        # ["pinnacle_odd1", "pinnacle_odd2", "pinnacle_odd3"],
     ]
 )
 
@@ -228,6 +228,6 @@ try:
     print(unique)
 except Exception:
     df_final = pd.DataFrame()
-    print("NÃO HÁ ARBITRAGENS NO MOMENTO")
+    print("THERE ARE NO ARBITRAGE BETTING AT THIS TIME")
 
 # print("REQUEST TIME:  " + str(end - start) + " SECONDS")

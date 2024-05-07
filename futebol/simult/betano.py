@@ -15,6 +15,7 @@ def get_betano(df):
     df = df.dropna(subset="aa_innerText").aa_innerText.apply(lambda x: pd.Series([q for q in re.split(r"[\n]", x)
         if not re.match(r"\b\d{2}/\d{2}\b", q)
         if not re.match(r"\d{2}:\d{2}\b", q)
+        if not re.match(r".*Primeiro jogo.*", q)
         if not re.match("AO VIVO", q)
         if not re.match("SO", q)
         if not re.match(r"^\d+$", q)]))[[0, 1, 2, 4, 5]].rename(columns={
