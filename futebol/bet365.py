@@ -55,7 +55,7 @@ def get_bet365():
             "https://www.bet365.com/#/AC/B1/C1/D1002/E88369731/G40/"
         )
         sleep(3)
-        df_teams = get_dataframe_teams(driver, query="div.rcl-ParticipantFixtureDetails_LhsContainer")
+        df_teams = get_dataframe_teams(driver, query="div.rcl-ParticipantFixtureDetails_TeamNames")
         df_odds = get_dataframe_odds(driver, query="span.sgl-ParticipantOddsOnly80_Odds")
         driver.quit()
         df_parts_odds = np.array_split(df_odds, 3)
