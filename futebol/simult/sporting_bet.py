@@ -11,7 +11,7 @@ from rename import rename
 
 add_printer(1)
 
-def get_sporting_bet(df):
+def format_sportingbet(df):
     df = df.dropna(subset="aa_innerText").aa_innerText.apply(lambda x: pd.Series([q for q in re.split(r"[\n]", x)
     if not re.match("CRIAR APOSTA", q)
     if not re.match("SO", q)

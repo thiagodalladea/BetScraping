@@ -11,7 +11,7 @@ from rename import rename
 
 add_printer(1)
 
-def get_betano(df):
+def format_betano(df):
     df = df.dropna(subset="aa_innerText").aa_innerText.apply(lambda x: pd.Series([q for q in re.split(r"[\n]", x)
         if not re.match(r"\b\d{2}/\d{2}\b", q)
         if not re.match(r"\d{2}:\d{2}\b", q)

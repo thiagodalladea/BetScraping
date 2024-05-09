@@ -12,7 +12,7 @@ from rename import rename
 
 add_printer(1)
 
-def get_bet365_teams(df):
+def format_bet365_teams(df):
     df = df.dropna(subset="aa_innerText").aa_innerText.apply(lambda x: pd.Series([q for q in re.split(r"[\n]", x)
         if not re.match(r"\d{2}:\d{2}\b", q)]))[[0, 1]].rename(columns={
             0: "bet365_name1",
@@ -24,7 +24,7 @@ def get_bet365_teams(df):
 
     return df.reset_index(drop=True)
 
-def get_bet365_odds(df):
+def format_bet365_odds(df):
     df = df.dropna(subset="aa_innerText")
     df = df[["aa_innerText"]]
     df_parts_odds = np.array_split(df, 3)
