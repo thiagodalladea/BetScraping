@@ -25,7 +25,8 @@ def format_sportingbet(df):
         2: "sportingbet_odd1",
         3: "sportingbet_odd2",
         4: "sportingbet_odd3"
-    }).dropna().assign(sportingbet_odd1 = lambda q:q.sportingbet_odd1.str.replace(",", "."),
+    }).dropna().assign(
+        sportingbet_odd1 = lambda q:q.sportingbet_odd1.str.replace(",", "."),
         sportingbet_odd2=lambda q:q.sportingbet_odd2.str.replace(",", "."),
         sportingbet_odd3=lambda q:q.sportingbet_odd3.str.replace(",", ".")).astype({
             "sportingbet_odd1": "Float64",

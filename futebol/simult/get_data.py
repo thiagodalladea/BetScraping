@@ -13,6 +13,7 @@ from time import sleep, time
 from betano import format_betano
 from sporting_bet import format_sportingbet
 from bet365 import format_bet365_teams, format_bet365_odds
+from betfair import format_betfair
 
 def get_data(driver, name, query):
     if name == "betano":
@@ -62,4 +63,18 @@ def get_data(driver, name, query):
         df_odds = format_bet365_odds(dfs[1])
         df = pd.concat([df_teams, df_odds.reset_index(drop=True)], axis=1)
         df = df.sort_values(by=["bet365_name1", "bet365_name2"])
+        return df
+    elif name == "betfair":
+        sleep(3)
+        df = pd.DataFrame()
+        while df.empty:
+            df = get_df(
+                driver,
+                By,
+                WebDriverWait,
+                expected_conditions,
+                queryselector = query,
+                with_methods = True,
+            )
+        df = format_betfair(df)
         return df

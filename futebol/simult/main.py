@@ -15,68 +15,80 @@ from get_data import get_data
 add_printer(1)
 
 event = threading.Event()
+
+col_team1 = "bet365_name1"
+col_team2 = "bet365_name2"
+
 urls = [
     # SERIA A BRASIL
     [
         "https://br.betano.com/sport/futebol/brasil/brasileirao-serie-a-betano/10016/",
         "https://sports.sportingbet.com/pt-br/sports/futebol-4/aposta/brasil-33/brasileir%C3%A3o-a-102838",
         "https://www.bet365.com/#/AC/B1/C1/D1002/E88369731/G40/",
-        # "https://pinnacle.com/pt/soccer/brazil-serie-a/matchups/#all",
+        "https://www.betfair.com/apostas/br/futebol/brasileiro-s%C3%A9rie-a/c-13",
     ],
     # SERIE B BRASIL
     [
         "https://br.betano.com/sport/futebol/brasil/brasileirao-serie-b/10017/",
         "https://sports.sportingbet.com/pt-br/sports/futebol-4/aposta/brasil-33/brasileir%C3%A3o-b-102361",
         "https://www.bet365.com/#/AC/B1/C1/D1002/E102584281/F0/G40/",
-        # "https://www.pinnacle.com/pt/soccer/brazil-serie-b/matchups/#all",
+        "https://www.betfair.com/apostas/br/futebol/brasileiro-s%C3%A9rie-b/c-321319",
     ],
     # COPA DO BRASIL
     # [
     #     # "https://br.betano.com/sport/futebol/competicoes/brasil/10004/?sl=10008",
     #     # "https://sports.sportingbet.com/pt-br/sports/futebol-4/aposta/brasil-33/copa-do-brasil-102723",
     #     # "https://www.bet365.com/#/AC/B1/C1/D1002/E103295038/F0/G40/",
+    #     # "https://www.betfair.com/apostas/br/futebol/copa-do-brasil/c-89219",
     # ],
     # ENGLAND
     [
         "https://br.betano.com/sport/futebol/league/premier-league-inglaterra/1/",
         "https://sports.sportingbet.com/pt-br/sports/futebol-4/aposta/inglaterra-14/premier-league-102841",
         "https://www.bet365.com/#/AC/B1/C1/D1002/E91422157/G40/",
+        "https://www.betfair.com/apostas/br/futebol/inglaterra-premier-league/c-10932509",
     ],
     # SPAIN
     [
         "https://br.betano.com/sport/futebol/espanha/laliga/5/",
         "https://sports.sportingbet.com/pt-br/sports/futebol-4/aposta/espanha-28/laliga-102829",
         "https://www.bet365.com/#/AC/B1/C1/D1002/E91721703/G40/",
+        "https://www.betfair.com/apostas/br/futebol/espanha-la-liga/c-117",
     ],
     # GERMANY
     [
         "https://br.betano.com/sport/futebol/alemanha/bundesliga/216/",
         "https://sports.sportingbet.com/pt-br/sports/futebol-4/aposta/alemanha-17/bundesliga-102842",
         "https://www.bet365.com/#/AC/B1/C1/D1002/E92193314/G40/",
+        "https://www.betfair.com/apostas/br/futebol/bundesliga-alem%C3%A3/c-59",
     ],
     # ITALY
     [
         "https://br.betano.com/sport/futebol/italia/serie-a/1635/",
         "https://sports.sportingbet.com/pt-br/sports/futebol-4/aposta/it%C3%A1lia-20/s%C3%A9rie-a-102846",
         "https://www.bet365.com/#/AC/B1/C1/D1002/E92269709/G40/",
+        "https://www.betfair.com/apostas/br/futebol/it%C3%A1lia-s%C3%A9rie-a/c-81",
     ],
-    FRANCE
+    # FRANCE
     [
         "https://br.betano.com/sport/futebol/franca/ligue-1/215/",
         "https://sports.sportingbet.com/pt-br/sports/futebol-4/aposta/fran%C3%A7a-16/ligue-1-102843",
         "https://www.bet365.com/#/AC/B1/C1/D1002/E92193218/G40/",
+        "https://www.betfair.com/apostas/br/futebol/fran%C3%A7a-ligue-1/c-55",
     ],
     # USA
     [
         "https://br.betano.com/sport/futebol/eua/mls/17103/",
         "https://sports.sportingbet.com/pt-br/sports/futebol-4/aposta/am%C3%A9rica-do-norte-9/major-league-soccer-102849?tab=matches",
         "https://www.bet365.com/#/AC/B1/C1/D1002/E99351127/F0/G40/",
+        "https://www.betfair.com/apostas/br/futebol/mls/c-141",
     ],
     # DENMARK
     [
         "https://br.betano.com/sport/futebol/competicoes/dinamarca/11339/",
         "https://sports.sportingbet.com/pt-br/sports/futebol-4/aposta/dinamarca-13",
         "https://www.bet365.com/#/AC/B1/C1/D1002/E99511680/F0/G40/",
+        "https://www.betfair.com/apostas/br/futebol/dinamarca-superliga/c-23",
     ],
 ]
 
@@ -91,7 +103,7 @@ names = [
     "betano",
     "sportingbet",
     "bet365",
-    # "pinnacle",
+    "betfair"
 ]
 
 for url1 in urls:
@@ -101,7 +113,7 @@ for url1 in urls:
         "div.vue-recycle-scroller__item-view",
         "ms-event",
         ["div.rcl-ParticipantFixtureDetails_TeamNames", "span.sgl-ParticipantOddsOnly80_Odds"],
-        # "div.style_row__12oAB",
+        "li.com-coupon-line-new-layout",
     ]
 
     for name in names:
@@ -132,6 +144,7 @@ for url1 in urls:
     df_betano = pd.DataFrame()
     df_sportingbet = pd.DataFrame()
     df_bet365 = pd.DataFrame()
+    df_betfair = pd.DataFrame()
 
     for result in results:
         if result.columns[0] == "betano_name1":
@@ -140,8 +153,8 @@ for url1 in urls:
             df_sportingbet = result
         elif result.columns[0] == "bet365_name1":
             df_bet365 = result
-        # elif result.columns[0] == "pinnacle_name1":
-        #     df_pinnacle = result
+        elif result.columns[0] == "betfair_name1":
+            df_betfair = result
 
     merged_df = pd.DataFrame()
 
@@ -149,8 +162,8 @@ for url1 in urls:
         right_on=["sportingbet_name1", "sportingbet_name2"], how="outer")
     merged_df = pd.merge(merged_df, df_bet365, left_on=["betano_name1", "betano_name2"],
         right_on=["bet365_name1", "bet365_name2"], how="outer")
-    # merged_df = pd.merge(merged_df, df_pinnacle, left_on=["betano_name1", "betano_name2"],
-    #     right_on=["pinnacle_name1", "pinnacle_name2"], how="outer")
+    merged_df = pd.merge(merged_df, df_betfair, left_on=["betano_name1", "betano_name2"],
+        right_on=["betfair_name1", "betfair_name2"], how="outer")
     merged_df = merged_df.dropna().reset_index(drop=True)
 
     print("\n\nMERGED------------")
@@ -163,7 +176,7 @@ for url1 in urls:
             ["betano_odd1", "betano_odd2", "betano_odd3"],
             ["sportingbet_odd1", "sportingbet_odd2", "sportingbet_odd3"],
             ["bet365_odd1", "bet365_odd2", "bet365_odd3"],
-            # ["pinnacle_odd1", "pinnacle_odd2", "pinnacle_odd3"],
+            ["betfair_odd1", "betfair_odd2", "betfair_odd3"],
         ]
     )
 
@@ -254,4 +267,4 @@ for url1 in urls:
         df_final = pd.DataFrame()
         print("THERE ARE NO ARBITRAGE BETTING AT THIS TIME")
 
-    print("REQUEST TIME:  " + str(end - start) + " SECONDS")
+    # print("REQUEST TIME:  " + str(end - start) + " SECONDS")

@@ -24,7 +24,8 @@ def format_betano(df):
             2: "betano_odd1",
             4: "betano_odd2",
             5: "betano_odd3"
-        }).dropna().assign(betano_odd1=lambda q:q.betano_odd1.str.replace(",", "."),
+        }).dropna().assign(
+            betano_odd1=lambda q:q.betano_odd1.str.replace(",", "."),
             betano_odd2=lambda q:q.betano_odd2.str.replace(",", "."),
             betano_odd3=lambda q:q.betano_odd3.str.replace(",", ".")).astype({
                 "betano_odd1": "Float64", "betano_odd2": "Float64", "betano_odd3": "Float64"

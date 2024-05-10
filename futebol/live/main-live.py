@@ -29,6 +29,8 @@ driver_betano.get("https://br.betano.com/live/")
 
 while True:
     sleep(7)
+
+    # BET365
     df_bet365 = get_dataframe(driver_bet365, query="div.ovm-Fixture_Container")
     df_bet365 = df_bet365.loc[df_bet365.aa_innerText.str.split("\n").str[2:].apply(
         lambda x: True if re.match(r"^[\d:]+Ç\d+Ç\d+Ç\d+Ç[\d.]+Ç[\d.]", "Ç".join(x)) else False)
@@ -44,6 +46,7 @@ while True:
     }).sort_values(by=["bet365_team1", "bet365_team2"])
     print(df_bet365)
 
+    # BETANO
     df_teams = get_dataframe(driver_betano, query="div.tw-w-full.tw-flex.tw-flex-col.tw-items-start.tw-justify-center.tw-truncate")
     df_teams = df_teams.dropna(subset="aa_innerText").aa_innerText.apply(lambda x: pd.Series([q for q in re.split(r"[\n]", x)
         if not re.match(r"^\d$", q)
@@ -63,3 +66,5 @@ while True:
     })
     df_betano = pd.concat([df_teams, df_odds.reset_index(drop=True)], axis=1).dropna().sort_values(by=["betano_team1", "betano_team2"])
     print(df_betano)
+
+    # BETFAIR
